@@ -4,9 +4,9 @@ using System.Collections;
 public class PlayerController : MonoBehaviour
 {
 	private Rigidbody playerRb;
+	private Renderer[] playerRenderers;
+	private AudioSource gunSound;
 	private GameManager gameManager;
-	
-	private int hit = -1;
 	
 	private Vector3 movementInput;
 	private float speed = 10.0f;
@@ -17,12 +17,16 @@ public class PlayerController : MonoBehaviour
 	private bool canFire = true;
 	[SerializeField] private GameObject bulletSpawn;
 	
-	private AudioSource gunSound;
+	private int hit = -1;
+	private bool isInvincible = false;
+	[SerializeField] private float iFrameTime = 1.5f;
+	[SerializeField] private float blinkInterval = 0.15f;
 	
 	void Awake()
     {
 	    playerRb = GetComponent<Rigidbody>();
 	    gunSound = GetComponent<AudioSource>();
+	    playerRenderers = GetComponentsInChildren<Renderer>();
     }
     
 	void Start()
@@ -30,7 +34,6 @@ public class PlayerController : MonoBehaviour
 		gameManager = GameManager.Instance;
 	}
 
-    // Update is called once per frame
     void Update()
     {
 	    // get input for movement
@@ -68,10 +71,32 @@ public class PlayerController : MonoBehaviour
 		}
 	}
     
+	// Controls how fast the player can fire
 	IEnumerator FireRate()
 	{
 		yield return new WaitForSeconds(rateOfFire);
 		canFire = true;
+	}
+	
+	// Controls the time the player is invincible as well as the blinking of the iFrames
+	IEnumerator IFrameBlink()
+	{
+		isInvincible = true;
+		float timeElasped = 0;
+		
+		while (timeElasped < iFrameTime)
+		{
+			foreach (Renderer r in playerRenderers)
+				r.enabled = !r.enabled;
+				
+			yield return new WaitForSeconds(blinkInterval);
+			timeElasped += blinkInterval;
+		}
+		
+		foreach (Renderer r in playerRenderers)
+			r.enabled = !r.enabled;
+			
+		isInvincible = false;
 	}
 	
 	void PlayerMovement()
@@ -89,9 +114,10 @@ public class PlayerController : MonoBehaviour
 		
 	}
 	
+	// When hit by bullet
 	private void OnTriggerEnter (Collider other)
 	{
-		if (other.gameObject.CompareTag("Bullet(Enemy)"))
+		if (other.gameObject.CompareTag("Bullet(Enemy)") && !isInvincible)
 		{
 			other.gameObject.SetActive(false);
 			gameManager.UpdateLife(hit);
@@ -99,18 +125,27 @@ public class PlayerController : MonoBehaviour
 			{
 				gameObject.SetActive(false);
 			}
+			else
+			{
+				StartCoroutine(IFrameBlink());
+			}
 		}
 	}
 	
+	// When player collides with an enemy
 	private void OnCollisionEnter (Collision other)
 	{
-		if (other.gameObject.CompareTag("Enemy"))
+		if (other.gameObject.CompareTag("Enemy") && !isInvincible)
 		{
 			Destroy(other.gameObject);
 			gameManager.UpdateLife(hit);
 			if (gameManager.lives == 0)
 			{
 				gameObject.SetActive(false);
+			}
+			else
+			{
+				StartCoroutine(IFrameBlink());
 			}
 		}
 	}

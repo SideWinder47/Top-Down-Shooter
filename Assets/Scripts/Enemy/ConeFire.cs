@@ -6,7 +6,7 @@ public class ConeFire : MonoBehaviour
 	[SerializeField] private AudioSource gunSound;
 	 
 	private float bulletSpeed = 5f;
-	private float burstDelay = 3f;
+	private float burstDelay = 2f;
 	private int bulletCount = 5;
 	private float coneAngle = 45f;
 

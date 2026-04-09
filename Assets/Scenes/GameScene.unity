@@ -1115,7 +1115,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   lifeText: {fileID: 544197925}
   scoreText: {fileID: 797614965}
-  gameoverScreen: {fileID: 0}
+  gameoverScreen: {fileID: 994462937}
   titleScreen: {fileID: 1208729480}
   score: 0
   lives: 0
@@ -2168,10 +2168,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 530641122413815141, guid: 15e976f0f2678d74fa49a8f5bb9fefd1, type: 3}
+      propertyPath: m_Constraints
+      value: 116
+      objectReference: {fileID: 0}
+    - target: {fileID: 2059574713855195689, guid: 15e976f0f2678d74fa49a8f5bb9fefd1, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4823703677677297308, guid: 15e976f0f2678d74fa49a8f5bb9fefd1, type: 3}
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 719703844}
+    - target: {fileID: 4844020937136219097, guid: 15e976f0f2678d74fa49a8f5bb9fefd1, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5117943354596349059, guid: 15e976f0f2678d74fa49a8f5bb9fefd1, type: 3}
       propertyPath: m_Name
       value: Player
